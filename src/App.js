@@ -1,9 +1,16 @@
-// react-dates
+import React from "react";
+
+import "trix/dist/trix";
+import { TrixEditor } from "react-trix";
+
 import "react-dates/initialize";
 import "react-dates/lib/css/_datepicker.css";
-
-import React from "react";
 import { SingleDatePicker } from "react-dates";
+
+// To do
+// - validation
+// - remove unnecessary editor toolbar items
+// - sanitize message before rendering
 
 const INPUT_PAGE = 0;
 const OUTPUT_PAGE = 1;
@@ -42,10 +49,10 @@ function InputPage({ submit, setValues, values }) {
         id="delivery-date"
       />
       <div>
-        <textarea
-          defaultValue={message}
-          onChange={(e) => {
-            setValues({ message: e.target.value });
+        <TrixEditor
+        value={message}
+          onChange={(text) => {
+            setValues({ message: text });
           }}
         />
       </div>
@@ -69,7 +76,7 @@ function OutputPage({ goBack, values }) {
       <h1>Output</h1>
       <div>
         <p>{date.toString()}</p>
-        <p>{message}</p>
+        <div dangerouslySetInnerHTML={{__html: message}} />
         <p>{selectedTheme ? selectedTheme.label : ""}</p>
         <button onClick={goBack}>Go back</button>
       </div>
