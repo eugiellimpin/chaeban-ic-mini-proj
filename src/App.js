@@ -24,6 +24,14 @@ function InputPage({ submit, setValues, values }) {
         id="delivery-date"
       />
       <div>
+        <textarea
+          defaultValue={values.message}
+          onChange={(e) => {
+            setValues({ message: e.target.value });
+          }}
+        />
+      </div>
+      <div>
         <button onClick={submit}>Submit</button>
       </div>
     </div>
