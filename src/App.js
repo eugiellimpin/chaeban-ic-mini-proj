@@ -2,15 +2,20 @@ import React from "react";
 
 import "trix/dist/trix";
 import { TrixEditor } from "react-trix";
+import "trix/dist/trix.css";
 
 import "react-dates/initialize";
 import "react-dates/lib/css/_datepicker.css";
 import { SingleDatePicker } from "react-dates";
 
+import "./tailwind.output.css";
+
 // To do
 // - validation
 // - remove unnecessary editor toolbar items
 // - sanitize message before rendering
+// - design
+// - favicon
 
 const INPUT_PAGE = 0;
 const OUTPUT_PAGE = 1;
@@ -39,7 +44,7 @@ function InputPage({ submit, setValues, values }) {
   const { date, message, themeId } = values;
 
   return (
-    <div>
+    <>
       <h1>Input</h1>
       <SingleDatePicker
         date={date}
@@ -50,7 +55,7 @@ function InputPage({ submit, setValues, values }) {
       />
       <div>
         <TrixEditor
-        value={message}
+          value={message}
           onChange={(text) => {
             setValues({ message: text });
           }}
@@ -63,7 +68,7 @@ function InputPage({ submit, setValues, values }) {
       <div>
         <button onClick={submit}>Submit</button>
       </div>
-    </div>
+    </>
   );
 }
 
@@ -76,7 +81,7 @@ function OutputPage({ goBack, values }) {
       <h1>Output</h1>
       <div>
         <p>{date.toString()}</p>
-        <div dangerouslySetInnerHTML={{__html: message}} />
+        <div dangerouslySetInnerHTML={{ __html: message }} />
         <p>{selectedTheme ? selectedTheme.label : ""}</p>
         <button onClick={goBack}>Go back</button>
       </div>
@@ -91,16 +96,25 @@ function App() {
   });
   const [activePage, setActivePage] = React.useState(INPUT_PAGE);
 
-  return [
-    <InputPage
-      submit={() => setActivePage(OUTPUT_PAGE)}
-      values={values}
-      setValues={(newValues) =>
-        setValues((prevValues) => ({ ...prevValues, ...newValues }))
+  return (
+    <div className="flex flex-col items-center">
+      {
+        [
+          <InputPage
+            submit={() => setActivePage(OUTPUT_PAGE)}
+            values={values}
+            setValues={(newValues) =>
+              setValues((prevValues) => ({ ...prevValues, ...newValues }))
+            }
+          />,
+          <OutputPage
+            goBack={() => setActivePage(INPUT_PAGE)}
+            values={values}
+          />,
+        ][activePage]
       }
-    />,
-    <OutputPage goBack={() => setActivePage(INPUT_PAGE)} values={values} />,
-  ][activePage];
+    </div>
+  );
 }
 
 export default App;
